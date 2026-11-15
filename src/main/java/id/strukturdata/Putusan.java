@@ -1,7 +1,9 @@
 package id.strukturdata;
 // Satu data putusan pengadilan (ringkasan terstruktur sesuai skema panduan 2.2).
 import java.time.LocalDate;
- // Identitas perkara
+import java.util.Objects;
+
+// Identitas perkara
 public class Putusan {
     private final String caseId;
     private final String nomorPerkara;
@@ -20,7 +22,8 @@ public class Putusan {
     private final String keadaanMemberatkan;
     private final String keadaanMeringankan;
     private final String sourcePages;
-// Constructor: mengisi semua atribut saat objek dibuat.
+
+    // Constructor: mengisi semua atribut saat objek dibuat.
     public Putusan(String caseId, String nomorPerkara, String pengadilan,
                    LocalDate tanggalPutusan, String terdakwaKode,
                    String jenisNarkotika, double beratBarangBuktiGram,
@@ -45,7 +48,8 @@ public class Putusan {
         this.keadaanMeringankan = keadaanMeringankan;
         this.sourcePages = sourcePages;
     }
- // Getter: untuk membaca nilai atribut dari luar class.
+
+    // Getter: untuk membaca nilai atribut dari luar class.
     public String getCaseId() { return caseId; }
     public String getNomorPerkara() { return nomorPerkara; }
     public String getPengadilan() { return pengadilan; }
@@ -62,15 +66,34 @@ public class Putusan {
     public String getKeadaanMemberatkan() { return keadaanMemberatkan; }
     public String getKeadaanMeringankan() { return keadaanMeringankan; }
     public String getSourcePages() { return sourcePages; }
-// Ringkasan satu baris, dipakai untuk fitur Tampil.
+
+    // Ringkasan satu baris, dipakai untuk fitur Tampil.
     @Override
     public String toString() {
         return caseId + " | " + nomorPerkara + " | " + pengadilan
                 + " | " + jenisNarkotika
                 + " | vonis " + vonisBulan + " bulan";
     }
-    //Mengembalikan pesan error, atau null kalau data valid.
+
+    // Dua Putusan dianggap sama kalau caseId-nya sama.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Putusan lain = (Putusan) o;
+        return Objects.equals(caseId, lain.caseId);
+    }
+
+    // Harus konsisten dengan equals: dihitung dari caseId saja.
+    @Override
+    public int hashCode() {
+        return Objects.hash(caseId);
+    }
+
+    // Mengembalikan pesan error, atau null kalau data valid.
     // Dipakai saat impor CSV untuk menolak record yang salah.
+    // Atribut wajib: caseId, nomorPerkara, terdakwaKode.
+    // Atribut lain boleh kosong (nilai tidak ditemukan ditulis kosong/0, bukan diperkirakan).
     public String validasi() {
         if (caseId == null || caseId.isBlank()) return "caseId kosong";
         if (nomorPerkara == null || nomorPerkara.isBlank()) return "nomorPerkara kosong";
@@ -78,7 +101,7 @@ public class Putusan {
         if (tuntutanBulan < 0) return "tuntutanBulan tidak boleh negatif";
         if (vonisBulan < 0) return "vonisBulan tidak boleh negatif";
         if (dendaRupiah < 0) return "dendaRupiah tidak boleh negatif";
-        if (beratBarangBuktiGram < 0) return "beratBarangBuktiGram tidak boleh negatif";
+        if (beratBarangBuktiGram < 0 || Double.isNaN(beratBarangBuktiGram)) return "beratBarangBuktiGram tidak valid (negatif atau bukan angka)";
         return null;
     }
 }
