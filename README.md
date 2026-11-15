@@ -2,9 +2,9 @@
 
 # UTS Struktur Data - Putusan Narkotika
 
-**Pembuat:** Govinda Abdurrasyid Altamis, kelompok 28
-**Mata kuliah:** Struktur Data, Universitas Muhammadiyah Malang
-**Dosen pengampu:** Galih W. Wicaksono
+- **Pembuat:** Govinda Abdurrasyid Altamis, kelompok 28
+- **Mata kuliah:** Struktur Data, Universitas Muhammadiyah Malang
+- **Dosen pengampu:** Galih W. Wicaksono
 
 ## Struktur data yang dipilih
 
